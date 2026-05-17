@@ -1,0 +1,151 @@
+/* ═══════════════════════════════════════════════════════
+   Float — Theme Variables
+   Discord-like dark theme with 7.css Windows 7 aesthetic
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  /* Primary Palette */
+  --float-primary: #5865F2;
+  --float-primary-hover: #4752C4;
+  --float-primary-active: #3C45A5;
+  --float-accent: #00D4AA;
+  --float-accent-hover: #00B894;
+
+  /* Background Colors */
+  --bg-tertiary: #1E1F22;
+  --bg-secondary: #2B2D31;
+  --bg-primary: #313338;
+  --bg-modifier-hover: #35373C;
+  --bg-modifier-active: #3F4147;
+  --bg-modifier-selected: #404249;
+  --bg-floating: #111214;
+
+  /* Text Colors */
+  --text-normal: #DBDEE1;
+  --text-muted: #949BA4;
+  --text-link: #00A8FC;
+  --text-positive: #23A559;
+  --text-warning: #F0B232;
+  --text-danger: #F23F43;
+  --text-brand: #5865F2;
+
+  /* Channel & Role Colors */
+  --channel-default: #80848E;
+  --channel-text: #8E9297;
+  --channel-voice: #80848E;
+
+  /* Status Colors */
+  --status-online: #23A559;
+  --status-idle: #F0B232;
+  --status-dnd: #F23F43;
+  --status-offline: #80848E;
+  --status-invisible: #80848E;
+
+  /* Border */
+  --border-severity: #3F4147;
+  --border-subtle: #2B2D31;
+
+  /* Scrollbar */
+  --scrollbar-thin-thumb: #1A1B1E;
+  --scrollbar-thin-track: #2B2D31;
+  --scrollbar-auto-thumb: #1A1B1E;
+  --scrollbar-auto-track: #2B2D31;
+
+  /* Input */
+  --input-background: #383A40;
+  --input-placeholder: #6D6F78;
+
+  /* Windows 7 Overrides for 7.css */
+  --win7-glass: rgba(40, 42, 54, 0.85);
+  --win7-border: rgba(88, 101, 242, 0.3);
+  --win7-border-light: rgba(88, 101, 242, 0.15);
+  --win7-titlebar: linear-gradient(180deg, #3C3F58 0%, #2B2D45 100%);
+  --win7-titlebar-inactive: linear-gradient(180deg, #3A3A4A 0%, #2E2E3E 100%);
+
+  /* Shadows */
+  --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-high: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  /* Spacing */
+  --space-xxs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-round: 50%;
+
+  /* Transitions */
+  --transition-fast: 100ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Font */
+  --font-primary: 'Segoe UI', 'Noto Sans SC', Tahoma, Geneva, Verdana, sans-serif;
+  --font-display: 'Segoe UI', 'Noto Sans SC', sans-serif;
+  --font-mono: 'Consolas', 'Sarasa Mono SC', monospace;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --bg-tertiary: #E3E5E8;
+  --bg-secondary: #F2F3F5;
+  --bg-primary: #FFFFFF;
+  --bg-modifier-hover: #E8E9EB;
+  --bg-modifier-active: #DEE0E3;
+  --bg-modifier-selected: #D4D6D9;
+  --bg-floating: #F2F3F5;
+  --text-normal: #060607;
+  --text-muted: #6D6F78;
+  --text-link: #0068E0;
+  --border-severity: #E1E2E4;
+  --border-subtle: #E8E9EB;
+  --input-background: #EBEDEF;
+  --input-placeholder: #A3A6AA;
+  --scrollbar-thin-thumb: #C4C9CE;
+  --scrollbar-thin-track: #F2F3F5;
+  --scrollbar-auto-thumb: #C4C9CE;
+  --scrollbar-auto-track: #F2F3F5;
+  --win7-glass: rgba(220, 222, 230, 0.9);
+  --win7-border: rgba(88, 101, 242, 0.25);
+  --win7-titlebar: linear-gradient(180deg, #A8B4F0 0%, #8B9AE8 100%);
+  --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-high: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Midnight Theme */
+[data-theme="midnight"] {
+  --bg-tertiary: #0D0D12;
+  --bg-secondary: #121218;
+  --bg-primary: #16161D;
+  --bg-modifier-hover: #1A1A24;
+  --bg-modifier-active: #22222E;
+  --bg-modifier-selected: #262636;
+  --bg-floating: #0A0A0F;
+  --win7-glass: rgba(13, 13, 18, 0.95);
+  --win7-titlebar: linear-gradient(180deg, #1A1A2E 0%, #12121C 100%);
+}
+
+/* AMOLED Theme */
+[data-theme="amoled"] {
+  --bg-tertiary: #000000;
+  --bg-secondary: #050505;
+  --bg-primary: #0A0A0A;
+  --bg-modifier-hover: #111111;
+  --bg-modifier-active: #1A1A1A;
+  --bg-modifier-selected: #1F1F1F;
+  --bg-floating: #000000;
+  --text-normal: #E0E0E0;
+  --border-severity: #1A1A1A;
+  --border-subtle: #111111;
+  --input-background: #111111;
+  --win7-glass: rgba(0, 0, 0, 0.98);
+  --win7-titlebar: linear-gradient(180deg, #111111 0%, #080808 100%);
+}

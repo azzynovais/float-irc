@@ -1,0 +1,92 @@
+/* ═══════════════════════════════════════════════════════
+   Float — Modal Styles
+   ═══════════════════════════════════════════════════════ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  animation: modalOverlayIn 0.2s ease;
+}
+
+@keyframes modalOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-window {
+  min-width: 400px;
+  max-width: 90vw;
+  max-height: 85vh;
+  animation: modalIn 0.25s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-window .window-body {
+  overflow-y: auto;
+  max-height: calc(85vh - 80px);
+}
+
+/* Modal specific sizing */
+.modal-window[style*="width:400px"] .window-body {
+  padding: var(--space-lg) !important;
+}
+
+.modal-window[style*="width:450px"] .window-body {
+  padding: var(--space-lg) !important;
+}
+
+.modal-close {
+  cursor: pointer;
+}
+
+/* Field Row Overrides inside modals */
+.modal-window .field-row-stacked {
+  margin-bottom: var(--space-md);
+}
+
+.modal-window .field-row-stacked label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.modal-window .field-row {
+  margin-bottom: var(--space-sm);
+}
+
+.modal-window .field-row label {
+  font-size: 13px;
+  color: var(--text-normal);
+}
+
+/* Checkbox Override */
+.modal-window input[type="checkbox"] {
+  accent-color: var(--float-primary);
+}
+
+/* Select Override */
+.modal-window select {
+  appearance: auto;
+  width: 100%;
+}
+
+/* Paragraph text in modals */
+.modal-window p {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: var(--space-md);
+}

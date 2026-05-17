@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <title>Float — IRC Social Network</title>
+  <link rel="stylesheet" href="https://unpkg.com/7.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/chat.css">
+  <link rel="stylesheet" href="/css/members.css">
+  <link rel="stylesheet" href="/css/modal.css">
+</head>
+<body>
+  <!-- ═══════════════════ LOGIN SCREEN ═══════════════════ -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-container window">
+      <div class="title-bar">
+        <div class="title-bar-text">Float — Login</div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="login-logo">
+          <div class="logo-icon">◈</div>
+          <h1 class="logo-text">Float</h1>
+          <p class="logo-subtitle">IRC Social Network</p>
+        </div>
+
+        <div class="login-tabs" role="tablist">
+          <button class="tab-btn active" data-tab="login" role="tab" aria-selected="true">Entrar</button>
+          <button class="tab-btn" data-tab="register" role="tab" aria-selected="false">Registrar</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="login-form active" autocomplete="off">
+          <div class="field-row-stacked">
+            <label for="login-username">Username ou Email</label>
+            <input id="login-username" type="text" placeholder="seu_username" required maxlength="50" autocomplete="username">
+          </div>
+          <div class="field-row-stacked">
+            <label for="login-password">Senha</label>
+            <input id="login-password" type="password" placeholder="••••••••" required minlength="8" autocomplete="current-password">
+          </div>
+          <button type="submit" class="login-btn">Entrar no Float</button>
+          <p class="login-hint">Conectado via Matrix • Criptografia E2E ativa</p>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="login-form" autocomplete="off" style="display:none;">
+          <div class="field-row-stacked">
+            <label for="reg-username">Username</label>
+            <input id="reg-username" type="text" placeholder="seu_username" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9]+" autocomplete="username">
+          </div>
+          <div class="field-row-stacked">
+            <label for="reg-displayname">Nome de Exibição</label>
+            <input id="reg-displayname" type="text" placeholder="Seu Nome" required maxlength="30" autocomplete="name">
+          </div>
+          <div class="field-row-stacked">
+            <label for="reg-email">Email</label>
+            <input id="reg-email" type="email" placeholder="seu@email.com" required autocomplete="email">
+          </div>
+          <div class="field-row-stacked">
+            <label for="reg-password">Senha</label>
+            <input id="reg-password" type="password" placeholder="Mínimo 8 caracteres" required minlength="8" autocomplete="new-password">
+          </div>
+          <div class="field-row-stacked">
+            <label for="reg-password2">Confirmar Senha</label>
+            <input id="reg-password2" type="password" placeholder="Repita a senha" required minlength="8" autocomplete="new-password">
+          </div>
+          <button type="submit" class="login-btn">Criar Conta</button>
+        </form>
+
+        <div id="login-error" class="login-error" style="display:none;"></div>
+      </div>
+      <div class="status-bar">
+        <p class="status-bar-field">Float v1.0</p>
+        <p class="status-bar-field">Matrix Protocol</p>
+        <p class="status-bar-field" id="login-status">Pronto</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ MAIN APP ═══════════════════ -->
+  <div id="app" class="app" style="display:none;">
+    <!-- Server Sidebar (left-most) -->
+    <aside class="server-bar">
+      <div class="server-icon home-icon active" data-tooltip="Início" data-view="home">
+        <span>◈</span>
+      </div>
+      <div class="server-divider"></div>
+      <div class="server-icon" data-tooltip="Float Server" data-view="server-default">
+        <span>F</span>
+      </div>
+      <div class="server-divider"></div>
+      <div class="server-icon add-server" data-tooltip="Adicionar Servidor">
+        <span>+</span>
+      </div>
+    </aside>
+
+    <!-- Channel Sidebar -->
+    <aside class="channel-sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Float</h2>
+        <span class="sidebar-badge" id="user-count">0 online</span>
+      </div>
+
+      <!-- Search -->
+      <div class="sidebar-search">
+        <input type="text" placeholder="Buscar canal..." id="channel-search" autocomplete="off">
+      </div>
+
+      <!-- Channel List -->
+      <div class="channel-list" id="channel-list">
+        <div class="channel-category">
+          <span class="category-label">CANAIS DE TEXTO</span>
+          <div id="text-channels"></div>
+        </div>
+        <div class="channel-category">
+          <span class="category-label">CANAIS DE VOZ</span>
+          <div id="voice-channels"></div>
+        </div>
+      </div>
+
+      <!-- Friends Section -->
+      <div class="channel-category friends-section">
+        <span class="category-label">AMIGOS — <span id="friend-count">0</span></span>
+        <div id="friend-list" class="friend-list"></div>
+      </div>
+
+      <!-- User Panel -->
+      <div class="user-panel">
+        <div class="user-panel-info">
+          <div class="user-avatar" id="my-avatar"></div>
+          <div class="user-details">
+            <span class="user-name" id="my-username">Carregando...</span>
+            <span class="user-status-tag" id="my-status-tag">online</span>
+          </div>
+        </div>
+        <div class="user-panel-actions">
+          <button class="panel-btn" id="btn-mute" title="Microfone">🎤</button>
+          <button class="panel-btn" id="btn-deafen" title="Áudio">🔊</button>
+          <button class="panel-btn" id="btn-settings" title="Configurações">⚙️</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Channel Header -->
+      <div class="channel-header">
+        <div class="channel-header-left">
+          <span class="channel-hash">#</span>
+          <h3 class="channel-name" id="current-channel-name">geral</h3>
+          <span class="channel-topic" id="current-channel-topic">Canal geral para conversas</span>
+        </div>
+        <div class="channel-header-right">
+          <button class="header-btn" id="btn-thread" title="Threads">🧵</button>
+          <button class="header-btn" id="btn-pinned" title="Fixados">📌</button>
+          <button class="header-btn" id="btn-members-toggle" title="Membros">👥</button>
+          <div class="header-search">
+            <input type="text" placeholder="Buscar mensagens..." id="msg-search" autocomplete="off">
+          </div>
+          <button class="header-btn" id="btn-inbox" title="Notificações">📥</button>
+        </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="chat-container">
+        <div class="messages-area" id="messages-area">
+          <!-- Welcome Message -->
+          <div class="welcome-message" id="welcome-msg">
+            <div class="welcome-icon">◈</div>
+            <h2>Bem-vindo ao #<span id="welcome-channel">geral</span>!</h2>
+            <p>Este é o começo do canal. Converse, compartilhe e divirta-se!</p>
+          </div>
+          <div id="messages-list"></div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typing-indicator" style="display:none;">
+          <div class="typing-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="typing-text" id="typing-text"></span>
+        </div>
+
+        <!-- Message Input -->
+        <div class="message-input-container">
+          <button class="input-btn" id="btn-attach" title="Anexar arquivo">📎</button>
+          <div class="message-input-wrapper">
+            <textarea
+              id="message-input"
+              placeholder="Enviar mensagem em #geral..."
+              rows="1"
+              autocomplete="off"
+            ></textarea>
+          </div>
+          <button class="input-btn" id="btn-emoji" title="Emoji">😀</button>
+          <button class="input-btn send-btn" id="btn-send" title="Enviar">➤</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Members Sidebar (right) -->
+    <aside class="members-sidebar" id="members-sidebar">
+      <div class="members-header">
+        <span>MEMBROS — <span id="member-count">0</span></span>
+      </div>
+      <div class="members-list" id="members-list">
+        <div class="member-category" id="online-members">
+          <span class="member-category-label">ONLINE — <span id="online-count">0</span></span>
+        </div>
+        <div class="member-category" id="offline-members">
+          <span class="member-category-label">OFFLINE — <span id="offline-count">0</span></span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ═══════════════════ MODALS ═══════════════════ -->
+
+  <!-- Settings Modal -->
+  <div id="modal-settings" class="modal-overlay" style="display:none;">
+    <div class="modal-window window">
+      <div class="title-bar">
+        <div class="title-bar-text">⚙️ Configurações do Float</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" class="modal-close"></button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="settings-layout">
+          <nav class="settings-nav">
+            <a href="#" class="settings-nav-item active" data-section="profile">Meu Perfil</a>
+            <a href="#" class="settings-nav-item" data-section="appearance">Aparência</a>
+            <a href="#" class="settings-nav-item" data-section="notifications">Notificações</a>
+            <a href="#" class="settings-nav-item" data-section="privacy">Privacidade</a>
+            <a href="#" class="settings-nav-item" data-section="security">Segurança</a>
+            <a href="#" class="settings-nav-item" data-section="matrix">Matrix</a>
+          </nav>
+          <div class="settings-content" id="settings-content">
+            <!-- Profile Section -->
+            <div class="settings-section active" id="section-profile">
+              <h3>Meu Perfil</h3>
+              <div class="field-row-stacked">
+                <label>Nome de Exibição</label>
+                <input type="text" id="setting-displayname" maxlength="30">
+              </div>
+              <div class="field-row-stacked">
+                <label>Mensagem de Status</label>
+                <input type="text" id="setting-statusmsg" maxlength="60" placeholder="Jogando algo...">
+              </div>
+              <div class="field-row-stacked">
+                <label>Status</label>
+                <select id="setting-status">
+                  <option value="online">🟢 Online</option>
+                  <option value="idle">🟡 Ausente</option>
+                  <option value="dnd">🔴 Não Perturbe</option>
+                  <option value="invisible">⚫ Invisível</option>
+                </select>
+              </div>
+              <button class="btn-primary" id="save-profile">Salvar Perfil</button>
+            </div>
+            <!-- Appearance Section -->
+            <div class="settings-section" id="section-appearance" style="display:none;">
+              <h3>Aparência</h3>
+              <div class="field-row-stacked">
+                <label>Tema</label>
+                <select id="setting-theme">
+                  <option value="dark">🌙 Escuro</option>
+                  <option value="light">☀️ Claro</option>
+                  <option value="midnight">🌃 Meia-noite</option>
+                  <option value="amoled">⬛ AMOLED</option>
+                </select>
+              </div>
+              <div class="field-row-stacked">
+                <label>Exibição de Mensagens</label>
+                <select id="setting-msgdisplay">
+                  <option value="cozy">Confortável</option>
+                  <option value="compact">Compacto</option>
+                </select>
+              </div>
+              <button class="btn-primary" id="save-appearance">Salvar Aparência</button>
+            </div>
+            <!-- Notifications Section -->
+            <div class="settings-section" id="section-notifications" style="display:none;">
+              <h3>Notificações</h3>
+              <div class="field-row">
+                <input type="checkbox" id="setting-notifsound" checked>
+                <label for="setting-notifsound">Sons de notificação</label>
+              </div>
+              <div class="field-row">
+                <input type="checkbox" id="setting-desktopnotif" checked>
+                <label for="setting-desktopnotif">Notificações na área de trabalho</label>
+              </div>
+              <button class="btn-primary" id="save-notifications">Salvar Notificações</button>
+            </div>
+            <!-- Privacy Section -->
+            <div class="settings-section" id="section-privacy" style="display:none;">
+              <h3>Privacidade</h3>
+              <p class="settings-info">O Float usa criptografia end-to-end (E2EE) baseada no protocolo Matrix com Olm/Megolm para proteger suas mensagens.</p>
+              <div class="field-row">
+                <input type="checkbox" id="setting-e2ee" checked disabled>
+                <label for="setting-e2ee">Criptografia End-to-End (sempre ativa)</label>
+              </div>
+              <div class="field-row-stacked">
+                <label>Chave de Criptografia (fingerprint)</label>
+                <div class="encryption-key" id="my-encryption-key">Carregando...</div>
+              </div>
+            </div>
+            <!-- Security Section -->
+            <div class="settings-section" id="section-security" style="display:none;">
+              <h3>Segurança</h3>
+              <p class="settings-info">Gerencie suas sessões ativas e dispositivos conectados.</p>
+              <div class="security-info">
+                <div class="security-item">
+                  <span>🔐 Algoritmo de Criptografia:</span> <strong>AES-256-GCM + Olm/Megolm</strong>
+                </div>
+                <div class="security-item">
+                  <span>🔑 Troca de Chaves:</span> <strong>X25519 ECDH</strong>
+                </div>
+                <div class="security-item">
+                  <span>📝 Assinatura:</span> <strong>Ed25519</strong>
+                </div>
+                <div class="security-item">
+                  <span>🛡️ Hash de Senha:</span> <strong>Bcrypt (12 rounds)</strong>
+                </div>
+              </div>
+              <button class="btn-danger" id="logout-all">Sair de Todos os Dispositivos</button>
+            </div>
+            <!-- Matrix Section -->
+            <div class="settings-section" id="section-matrix" style="display:none;">
+              <h3>Matrix Protocol</h3>
+              <p class="settings-info">O Float utiliza o protocolo Matrix para comunicação federada entre servidores IRC.</p>
+              <div class="field-row-stacked">
+                <label>Homeserver</label>
+                <input type="text" id="setting-homeserver" readonly>
+              </div>
+              <div class="field-row-stacked">
+                <label>Matrix User ID</label>
+                <input type="text" id="setting-matrixid" readonly>
+              </div>
+              <div class="field-row-stacked">
+                <label>Device ID</label>
+                <input type="text" id="setting-deviceid" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Friend Request Modal -->
+  <div id="modal-addfriend" class="modal-overlay" style="display:none;">
+    <div class="modal-window window" style="width:400px;">
+      <div class="title-bar">
+        <div class="title-bar-text">👤 Adicionar Amigo</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" class="modal-close"></button>
+        </div>
+      </div>
+      <div class="window-body">
+        <p>Adicione amigos pelo username no Float ou Matrix ID.</p>
+        <div class="field-row-stacked">
+          <input type="text" id="addfriend-username" placeholder="Username ou @user:matrix.org" autocomplete="off">
+        </div>
+        <button class="btn-primary" id="send-friend-request">Enviar Solicitação</button>
+        <div id="friend-request-result" style="display:none;" class="result-msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Channel Modal -->
+  <div id="modal-createchannel" class="modal-overlay" style="display:none;">
+    <div class="modal-window window" style="width:450px;">
+      <div class="title-bar">
+        <div class="title-bar-text">📝 Criar Canal</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" class="modal-close"></button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="field-row-stacked">
+          <label>Nome do Canal</label>
+          <input type="text" id="newchannel-name" placeholder="meu-canal" maxlength="30" autocomplete="off">
+        </div>
+        <div class="field-row-stacked">
+          <label>Tópico</label>
+          <input type="text" id="newchannel-topic" placeholder="Sobre o que é este canal?" maxlength="120" autocomplete="off">
+        </div>
+        <div class="field-row-stacked">
+          <label>Tipo</label>
+          <select id="newchannel-type">
+            <option value="text">💬 Texto</option>
+            <option value="voice">🔊 Voz</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <input type="checkbox" id="newchannel-encrypted" checked>
+          <label for="newchannel-encrypted">🔐 Criptografia End-to-End</label>
+        </div>
+        <button class="btn-primary" id="create-channel-btn">Criar Canal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  <div id="context-menu" class="context-menu" style="display:none;">
+    <button class="context-item" data-action="reply">↩ Responder</button>
+    <button class="context-item" data-action="react">😀 Reagir</button>
+    <button class="context-item" data-action="edit">✏️ Editar</button>
+    <button class="context-item" data-action="copy">📋 Copiar texto</button>
+    <button class="context-item" data-action="pin">📌 Fixar</button>
+    <hr class="context-separator">
+    <button class="context-item danger" data-action="delete">🗑️ Deletar</button>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/js/utils/constants.js"></script>
+  <script src="/js/utils/helpers.js"></script>
+  <script src="/js/utils/sanitize.js"></script>
+  <script src="/js/services/storage.js"></script>
+  <script src="/js/services/api.js"></script>
+  <script src="/js/services/encryption.js"></script>
+  <script src="/js/matrix.js"></script>
+  <script src="/js/ui/notification.js"></script>
+  <script src="/js/ui/modal.js"></script>
+  <script src="/js/ui/sidebar.js"></script>
+  <script src="/js/ui/chat.js"></script>
+  <script src="/js/ui/members.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
